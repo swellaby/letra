@@ -1,0 +1,14 @@
+dist/
+build/
+**/__pycache__/
+
+wheels/
+share/python-wheels/
+**/*.egg-info
+*.egg
+
+pip-log.txt
+pip-delete-this-directory.txt
+
+.coverage/
+.testresults/
