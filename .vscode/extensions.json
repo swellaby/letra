@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "swellaby.common-pack",
+    "swellaby.python-pack",
+    "ms-azure-devops.azure-pipelines"
+  ]
+}
