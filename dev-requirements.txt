@@ -1,0 +1,4 @@
+pytest==4.6.3
+pycodestyle==2.5.0
+black==19.3b0
+invoke==1.2.0

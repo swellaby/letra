@@ -1,0 +1,44 @@
+{
+  "files.exclude": {
+    "**/.pytest_cache": true,
+    "**/__pycache__": true,
+    ".testresults": true,
+    ".coverage": true
+  },
+  "cSpell.enabled": true,
+  "cSpell.ignorePaths": [
+    "**/__pycache__/",
+    "**/.pytest_cache/",
+    "**/.testresults/",
+    "**/*requirements*.txt",
+    "**/.git/**",
+    ".vscode",
+  ],
+  "cSpell.enabledLanguageIds": [
+    "asciidoc",
+    "azure-pipelines",
+    "html",
+    "ini",
+    "json",
+    "markdown",
+    "plaintext",
+    "properties",
+    "python",
+    "restructuredtext",
+    "text",
+    "yaml"
+  ],
+  "cSpell.dictionaries": [
+    "companies",
+    "en_us",
+    "filetypes",
+    "python",
+    "misc",
+    "softwareTerms"
+  ],
+  "files.associations": {
+    "**/.azure-pipelines/**": "azure-pipelines"
+  },
+  "python.testing.pyTestEnabled": false,
+  "python.testing.autoTestDiscoverOnSaveEnabled": false
+}
