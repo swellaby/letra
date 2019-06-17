@@ -1,0 +1,10 @@
+[run]
+branch = True
+source = letra
+omit = **/__init__.py
+
+[xml]
+output = .coverageresults/unit/cobertura.xml
+
+[html]
+directory  = .coverageresults/unit/html

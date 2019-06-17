@@ -10,5 +10,6 @@ share/python-wheels/
 pip-log.txt
 pip-delete-this-directory.txt
 
-.coverage/
+.coverage
+.coverageresults/
 .testresults/
