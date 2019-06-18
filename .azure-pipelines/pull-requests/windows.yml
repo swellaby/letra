@@ -25,14 +25,16 @@ steps:
     tasksAndArguments: 'lint'
     taskDisplayName: 'Lint'
 - template: templates/yml/python/combo/run-pytest-ci.yml@templates
-
-- task: PublishTestResults@2
-  displayName: 'publish unit test results'
-  inputs:
-    testResultsFormat: JUnit
-    testResultsFiles: 'junit.xml'
-    searchFolder: $(Build.SourcesDirectory)/.test-reports/results/unit
-    testRunTitle: 'letra::Unit Tests::Windows PR - Build $(Build.BuildId)'
+  parameters:
+    test:
+      additionalArgs: ''
+      taskDisplayName: 'Run unit tests'
+    publishTestResults:
+      taskDisplayName: 'Publish unit test results'
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'junit.xml'
+      searchFolder: $(Build.SourcesDirectory)/.test-reports/results/unit
+      testRunTitle: 'letra::Unit Tests::Windows PR - Build $(Build.BuildId)'
 
 - task: PublishCodeCoverageResults@1
   inputs:
