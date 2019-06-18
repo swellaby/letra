@@ -4,6 +4,7 @@
   "words": [
     "addopts",
     "cobertura",
+    "codecov",
     "coveragerc",
     "coverageresults",
     "filterwarnings",

@@ -1,0 +1,41 @@
+trigger:
+- master
+
+pr:
+- master
+
+pool:
+  vmImage: 'macos-10.14'
+
+resources:
+  repositories:
+  - repository: templates
+    type: github
+    name: swellaby/azure-pipelines-templates
+    endpoint: swellaby
+
+steps:
+- template: templates/yml/python/combo/setup-pip.yml@templates
+- template: templates/yml/python/steps/pip-install.yml@templates
+  parameters:
+    requirementsFile: dev-requirements.txt
+    taskDisplayName: 'Install development dependencies'
+- template: templates/yml/python/steps/run-invoke.yml@templates
+  parameters:
+    tasksAndArguments: 'lint'
+    taskDisplayName: 'Lint'
+- template: templates/yml/python/combo/run-pytest-ci.yml@templates
+
+- task: PublishTestResults@2
+  displayName: 'publish unit test results'
+  inputs:
+    testResultsFormat: JUnit
+    testResultsFiles: 'junit.xml'
+    searchFolder: $(Build.SourcesDirectory)/.test-reports/results/unit
+    testRunTitle: 'letra::Unit Tests::Mac PR - Build $(Build.BuildId)'
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/.test-reports/coverage/unit/cobertura.xml'
+  displayName: 'Publish coverage results'
