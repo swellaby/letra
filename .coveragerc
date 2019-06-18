@@ -4,7 +4,7 @@ source = letra
 omit = **/__init__.py
 
 [xml]
-output = .coverageresults/unit/cobertura.xml
+output = .test-reports/coverage/unit/cobertura.xml
 
 [html]
-directory  = .coverageresults/unit/html
+directory  = .test-reports/coverage/unit/html

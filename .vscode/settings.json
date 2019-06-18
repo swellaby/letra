@@ -5,6 +5,7 @@
     ".testresults": true,
     ".coverage": true,
     ".coverageresults": true,
+    ".test-reports": true
   },
   "cSpell.enabled": true,
   "cSpell.ignorePaths": [
