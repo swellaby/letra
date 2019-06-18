@@ -15,6 +15,10 @@ resources:
 
 steps:
 - template: templates/yml/python/combo/setup-pip.yml@templates
+  parameters:
+    pipInstall:
+      requirementsFile: dev-requirements.txt
+      taskDisplayName: 'Install development dependencies'
 - template: templates/yml/python/steps/run-invoke.yml@templates
   parameters:
     tasksAndArguments: 'check-format'
