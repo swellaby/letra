@@ -26,7 +26,8 @@ def clean_test_reports(c):
     rmtree(".coverage/", ignore_errors=True)
     rmtree(".testresults/", ignore_errors=True)
     rmtree(".coverageresults/", ignore_errors=True)
-    os.remove(".coverage")
+    if os.path.exists(".coverage"):
+        os.remove(".coverage")
 
 
 @task(aliases=["c"], pre=[clean_test_reports])
