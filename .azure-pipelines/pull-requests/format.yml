@@ -18,7 +18,7 @@ steps:
   parameters:
     pipInstall:
       requirementsFile: dev-requirements.txt
-      taskDisplayName: 'Install development dependencies'
+      taskDisplayName: 'Install dependencies'
 - template: templates/yml/python/steps/run-invoke.yml@templates
   parameters:
     tasksAndArguments: 'check-format'
