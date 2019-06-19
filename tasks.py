@@ -1,5 +1,7 @@
 from invoke import task
-
+import os
+import shutil
+from letra import __version__
 
 def black(c, check):
     cmd = f"black . --line-length=79 {'--check' if check is True else ''}"
@@ -21,11 +23,24 @@ def test(c):
     return c.run("pytest")
 
 
-@task(aliases=["lp"])
-def lint_python(c):
+@task(aliases=["l", "lp"])
+def lint(c):
     return c.run("pycodestyle .")
 
 
-@task(aliases=["l"], pre=[lint_python])
-def lint(c):
+@task()
+def clean_test_reports(c):
+    shutil.rmtree(".test-reports/", ignore_errors=True)
+    shutil.rmtree(".coverage/", ignore_errors=True)
+    shutil.rmtree(".testresults/", ignore_errors=True)
+    shutil.rmtree(".coverageresults/", ignore_errors=True)
+    os.remove(".coverage")
+
+
+@task(aliases=["c"], pre=[clean_test_reports])
+def clean(c):
     pass
+
+@task(aliases=["pv", "sv"])
+def print_version(c):
+    return print(__version__)

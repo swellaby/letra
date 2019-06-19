@@ -3,9 +3,12 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+version = {}
+exec(open("letra/version.py").read(), version)
+
 setup(
     name="letra",
-    version="0.0.1",
+    version=version["__version__"],
     license="MIT",
     author="Swellaby",
     author_email="opensource@swellaby.com",
