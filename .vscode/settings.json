@@ -3,7 +3,7 @@
     "**/.pytest_cache": true,
     "**/__pycache__": true,
     ".test-reports": true,
-    ".coverage": false,
+    ".coverage": true,
   },
   "cSpell.enabled": true,
   "cSpell.ignorePaths": [
