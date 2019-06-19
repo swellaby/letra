@@ -1,7 +1,7 @@
 [run]
 branch = True
 source = letra
-omit = **/__init__.py,letra/version.py
+omit = **/__init__.py
 
 [xml]
 output = .test-reports/coverage/unit/cobertura.xml
