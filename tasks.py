@@ -3,6 +3,7 @@ import os
 import shutil
 from letra import __version__
 
+
 def black(c, check):
     cmd = f"black . --line-length=79 {'--check' if check is True else ''}"
     return c.run(cmd)
@@ -40,6 +41,7 @@ def clean_test_reports(c):
 @task(aliases=["c"], pre=[clean_test_reports])
 def clean(c):
     pass
+
 
 @task(aliases=["pv", "sv"])
 def print_version(c):
