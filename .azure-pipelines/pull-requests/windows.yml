@@ -16,10 +16,10 @@ resources:
 
 steps:
 - template: templates/yml/python/combo/setup-pip.yml@templates
-- template: templates/yml/python/steps/pip-install.yml@templates
   parameters:
-    requirementsFile: dev-requirements.txt
-    taskDisplayName: 'Install development dependencies'
+    pipInstall:
+      requirementsFile: dev-requirements.txt
+      taskDisplayName: 'Install dependencies'
 - template: templates/yml/python/steps/run-invoke.yml@templates
   parameters:
     tasksAndArguments: 'lint'
