@@ -1,5 +1,4 @@
 from letra.label import Label
-from letra.version import __version__
 
 name = "bug"
 description = "Something isn't working!"
