@@ -23,9 +23,6 @@ def check_format(c):
 @task()
 def clean_test_reports(c):
     rmtree(".test-reports/", ignore_errors=True)
-    rmtree(".coverage/", ignore_errors=True)
-    rmtree(".testresults/", ignore_errors=True)
-    rmtree(".coverageresults/", ignore_errors=True)
     if os.path.exists(".coverage"):
         os.remove(".coverage")
 
