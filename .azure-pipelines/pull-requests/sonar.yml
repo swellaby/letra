@@ -15,7 +15,27 @@ resources:
 
 steps:
 - template: templates/yml/python/combo/setup-pip.yml@templates
+  parameters:
+    pipInstall:
+      requirementsFile: dev-requirements.txt
+      taskDisplayName: 'Install dependencies'
 - template: templates/yml/python/combo/run-pytest-ci.yml@templates
+  parameters:
+    test:
+      additionalArgs: ''
+      taskDisplayName: 'Run unit tests'
+    publishTestResults:
+      taskDisplayName: 'Publish unit test results'
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'junit.xml'
+      searchFolder: $(Build.SourcesDirectory)/.test-reports/results/unit
+      testRunTitle: 'letra::Unit Tests::Sonar PR - Build $(Build.BuildId)'
+
+- bash: |
+   export PACKAGE_VERSION=$(invoke print-version)
+    echo "##vso[task.setvariable variable=packageVersion]$PACKAGE_VERSION"
+  displayName: 'Get package version'
+
 
 - task: SonarSource.sonarcloud.14d9cde6-c1da-4d55-aa01-2965cd301255.SonarCloudPrepare@1
   displayName: 'Prepare analysis on SonarCloud'
@@ -24,7 +44,7 @@ steps:
     organization: swellaby
     scannerMode: CLI
     extraProperties: |
-      sonar.projectVersion=$(Build.BuildId)
+      sonar.projectVersion=$(packageVersion)
 
 - task: SonarSource.sonarcloud.ce096e50-6155-4de8-8800-4221aaeed4a1.SonarCloudAnalyze@1
   displayName: 'Run code analysis'
