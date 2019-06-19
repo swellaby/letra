@@ -2,10 +2,8 @@
   "files.exclude": {
     "**/.pytest_cache": true,
     "**/__pycache__": true,
-    ".testresults": false,
+    ".test-reports": true,
     ".coverage": false,
-    ".coverageresults": false,
-    ".test-reports": false
   },
   "cSpell.enabled": true,
   "cSpell.ignorePaths": [
