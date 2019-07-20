@@ -1,6 +1,7 @@
 from os import getcwd
 from os.path import abspath, join
 from yaml import dump, load, FullLoader, YAMLError
+from letra import Label
 
 
 def get_path(filepath):
@@ -9,9 +10,10 @@ def get_path(filepath):
 
 def read_labels_from_file(filepath):
     try:
-        return load(open(get_path(filepath)), Loader=FullLoader)
+        with open(get_path(filepath)) as stream:
+            return load(stream, Loader=FullLoader)
     except YAMLError as err:
-        raise ValueError("Unable to parse specified yaml file")
+        raise ValueError("Specified template file is not valid yaml")
     except Exception:
         raise
 

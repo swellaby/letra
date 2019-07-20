@@ -1,6 +1,11 @@
 from letra._yaml import read_labels_from_file
 from yaml import FullLoader, YAMLError
-from test.stubs import stub_labels, stub_stream, empty_mock
+from test.helpers import (
+    empty_mock,
+    stub_context_manager,
+    stub_labels,
+    stub_stream,
+)
 from pytest import raises
 
 
@@ -57,10 +62,10 @@ def test_raises_value_error_when_yaml_file_not_parseable(monkeypatch):
     monkeypatch.setattr("letra._yaml.getcwd", empty_mock)
     monkeypatch.setattr("letra._yaml.join", empty_mock)
     monkeypatch.setattr("letra._yaml.abspath", empty_mock)
-    monkeypatch.setattr("builtins.open", empty_mock)
+    monkeypatch.setattr("builtins.open", lambda x: stub_context_manager)
     monkeypatch.setattr("letra._yaml.load", mock_load)
 
     with raises(ValueError) as err:
         read_labels_from_file("")
 
-    assert str(err.value) == "Unable to parse specified yaml file"
+    assert str(err.value) == "Specified template file is not valid yaml"
