@@ -1,18 +1,18 @@
-from letra.label import Label
+from letra import Label
 
 name = "bug"
 description = "Something isn't working!"
 color = "#d73a4a"
-testLabel = Label(name=name, description=description, color=color)
+test_label = Label(name=name, description=description, color=color)
 
 
 def test_label_has_correct_name():
-    assert testLabel.name == name
+    assert test_label.name == name
 
 
 def test_label_has_correct_description():
-    assert testLabel.description == description
+    assert test_label.description == description
 
 
 def test_label_has_correct_color():
-    assert testLabel.color == color
+    assert test_label.color == color

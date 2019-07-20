@@ -27,7 +27,7 @@ def clean_test_reports(c):
         os.remove(".coverage")
 
 
-@task(aliases=["c"], pre=[clean_test_reports])
+@task(aliases=["cl"], pre=[clean_test_reports])
 def clean(c):
     pass
 
@@ -49,7 +49,7 @@ def reopen_coverage(c):
         return c.run("open " + path)
 
 
-@task(aliases=["oc"], pre=[test], post=[reopen_coverage])
+@task(aliases=["oc", "c"], pre=[test], post=[reopen_coverage])
 def open_coverage(c):
     pass
 

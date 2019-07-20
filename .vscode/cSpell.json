@@ -9,6 +9,7 @@
     "coveragerc",
     "coverageresults",
     "filterwarnings",
+    "getcwd",
     "junit",
     "junitxml",
     "letra",
