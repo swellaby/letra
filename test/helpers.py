@@ -37,13 +37,21 @@ stub_empty_template_file_contents = {"labels": []}
 stub_template_label_missing_name = {"labels": [{"description": "foo"}]}
 
 
-def empty_mock(*unused):
+def mock_empty(*unused):
     return ""
+
+
+def mock_false(*unused):
+    return False
+
+
+def mock_true(*unused):
+    return True
 
 
 stub_stream = TextIOWrapper(StringIO("", "\n"), "utf8", "", "\n", True, True)
 stub_context_manager = type(
-    "", (object,), {"__enter__": empty_mock, "__exit__": empty_mock}
+    "", (object,), {"__enter__": mock_empty, "__exit__": mock_empty}
 )()
 
 
