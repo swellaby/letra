@@ -14,7 +14,8 @@ def get_path(filepath):
         else:
             raise ValueError(
                 "Specified template file not found.\n"
-                f"Checked relative path: '{path}' and absolute path: '{filepath}'"
+                f"Checked relative path: '{filepath}' "
+                f"and absolute path: '{path}'"
             )
 
 

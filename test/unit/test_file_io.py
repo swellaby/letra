@@ -14,6 +14,7 @@ joined = f"{cwd}/{file_name}"
 relative_template_file = f"../{file_name}"
 exp_relative = f"/usr/foo/{file_name}"
 
+
 def test_get_path_returns_path_when_exact_path_exists(monkeypatch):
     monkeypatch.setattr("letra._file_io.path_exists", mock_true)
     exp = f"/bar/{file_name}"
@@ -48,7 +49,8 @@ def test_get_path_returns_path_when_relative_path_exists(monkeypatch):
 def test_get_path_raises_error_when_file_does_not_exist(monkeypatch):
     exp_err = (
         "Specified template file not found.\n"
-        f"Checked relative path: '{exp_relative}' and absolute path: '{relative_template_file}'"
+        f"Checked relative path: '{relative_template_file}' "
+        f"and absolute path: '{exp_relative}'"
     )
 
     monkeypatch.setattr("letra._file_io.path_exists", mock_false)
@@ -84,4 +86,3 @@ def test_read_template_bubbles_errors_from_yaml_loading(monkeypatch):
     with raises(ValueError) as err:
         read_template_from_file(joined)
     assert str(err.value) == exp_err
-
