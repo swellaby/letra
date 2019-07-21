@@ -56,6 +56,10 @@ def extract_labels(data):
         raise ValueError(msg)
 
     return [
-        Label(name=l["name"], description=l["description"], color=l["color"])
+        Label(
+            name=l["name"],
+            description=l.get("description"),
+            color=l.get("color"),
+        )
         for l in labels
     ]
