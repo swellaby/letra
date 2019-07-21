@@ -1,4 +1,4 @@
-from letra._yaml import read as read_yaml
+from .yaml import read as read_yaml, write as write_yaml
 from os import getcwd
 from os.path import abspath, join, exists as path_exists
 from string import Template
@@ -19,5 +19,9 @@ def get_path(filepath):
             )
 
 
-def read_template_from_file(filepath):
+def read_templates_from_file(filepath):
     return read_yaml(get_path(filepath))
+
+
+def write_templates_to_file(labels, filepath):
+    return write_yaml({"labels": labels}, filepath)

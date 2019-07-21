@@ -17,9 +17,9 @@ labels_schema = Schema([label_schema])
 def build_invalid_label_error(schema_error):
     return (
         "Labels must conform to the schema:\n"
-        "`name`: Required - string\n"
-        "`description`: Optional - string\n"
-        "`color`: Optional - valid hex color string\n"
+        "  `name`: Required - string\n"
+        "  `description`: Optional - string\n"
+        "  `color`: Optional - valid hex color string\n"
         "Error details: " + schema_error.autos[-1]
     )
 

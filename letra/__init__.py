@@ -1,2 +1,2 @@
 from .version import __version__
-from ._label import Label
+from .label import Label

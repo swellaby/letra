@@ -1,5 +1,5 @@
 from letra import Label
-from letra._parser import color_regex
+from letra._internal.parser import color_regex
 from io import StringIO, TextIOWrapper
 from string import Template
 
@@ -50,17 +50,23 @@ def mock_true(*unused):
 
 
 stub_stream = TextIOWrapper(StringIO("", "\n"), "utf8", "", "\n", True, True)
+
+
+def mock_stream(*unused):
+    return stub_stream
+
+
 stub_context_manager = type(
-    "", (object,), {"__enter__": mock_empty, "__exit__": mock_empty}
+    "", (object,), {"__enter__": mock_stream, "__exit__": mock_empty}
 )()
 
 
 def build_schema_failure_error_message(details):
     return (
         "Labels must conform to the schema:\n"
-        "`name`: Required - string\n"
-        "`description`: Optional - string\n"
-        "`color`: Optional - valid hex color string\n"
+        "  `name`: Required - string\n"
+        "  `description`: Optional - string\n"
+        "  `color`: Optional - valid hex color string\n"
         "Error details: " + details
     )
 
