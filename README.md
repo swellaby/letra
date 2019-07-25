@@ -1,6 +1,8 @@
 # letra
 Label management utility for GitHub issues
 
+Early, pre-Alpha, non-functional (yet)
+
 [![License Badge][license-badge]][license-url] 
 
 [![Linux CI Badge][linux-ci-badge]][linux-ci-url]

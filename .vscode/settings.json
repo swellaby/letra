@@ -4,6 +4,9 @@
     "**/__pycache__": true,
     ".test-reports": true,
     ".coverage": true,
+    "build/": true,
+    "dist/": true,
+    "**/*.egg-info/": true
   },
   "cSpell.enabled": true,
   "cSpell.ignorePaths": [
