@@ -1,7 +1,7 @@
 from schema import Optional, Regex, Schema, SchemaError
 from letra import Label
 
-color_regex = r"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+color_regex = r"^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
 
 label_schema = Schema(
     {
@@ -19,7 +19,7 @@ def build_invalid_label_error(schema_error):
         "Labels must conform to the schema:\n"
         "  `name`: Required - string\n"
         "  `description`: Optional - string\n"
-        "  `color`: Optional - valid hex color string\n"
+        "  `color`: Optional - valid hex color string *without the leading #\n"
         "Error details: " + schema_error.autos[-1]
     )
 

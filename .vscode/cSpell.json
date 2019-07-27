@@ -3,6 +3,10 @@
   "language": "en",
   "words": [
     "addopts",
+    "aenter",
+    "aexit",
+    "aiohttp",
+    "asyncio",
     "calebcartwright",
     "cobertura",
     "codecov",
@@ -16,6 +20,7 @@
     "pipefail",
     "pycodestyle",
     "pytest",
+    "pytestmark",
     "pyyaml",
     "rmtree",
     "setuptools",
