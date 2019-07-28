@@ -114,7 +114,10 @@ def check_github_api_response_for_errors(
 
     if status_code == 403:
         raise_github_unauthorized_error(
-            response=response, request_headers=request_headers
+            response=response,
+            owner=owner,
+            repository=repository,
+            request_headers=request_headers,
         )
 
     raise IOError(
