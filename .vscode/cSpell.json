@@ -26,6 +26,7 @@
     "setuptools",
     "setvariable",
     "shutil",
+    "strftime",
     "swellaby",
     "testpaths",
     "testresults",

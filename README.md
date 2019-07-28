@@ -23,11 +23,11 @@ Early, pre-Alpha, non-functional (yet)
 [license-url]: ./LICENSE
 [license-badge]: https://img.shields.io/github/license/swellaby/letra?style=flat-square&color=blue
 [downloads-badge]: https://img.shields.io/pypi/dm/letra?style=flat-square
-[linux-ci-badge]: https://img.shields.io/azure-devops/build/swellaby/opensource/49/master?label=linux%20build&style=flat-square
-[linux-ci-url]: https://dev.azure.com/swellaby/OpenSource/_build/latest?definitionId=49
+[linux-ci-badge]: https://img.shields.io/azure-devops/build/swellaby/opensource/89/master?label=linux%20build&style=flat-square
+[linux-ci-url]: https://dev.azure.com/swellaby/OpenSource/_build/latest?definitionId=89
 [mac-ci-badge]: https://img.shields.io/azure-devops/build/swellaby/opensource/90/master?label=mac%20build&style=flat-square
 [mac-ci-url]: https://dev.azure.com/swellaby/OpenSource/_build/latest?definitionId=90
-[windows-ci-badge]: https://img.shields.io/azure-devops/build/swellaby/opensource/56/master?label=windows%20build&style=flat-square
+[windows-ci-badge]: https://img.shields.io/azure-devops/build/swellaby/opensource/91/master?label=windows%20build&style=flat-square
 [windows-ci-url]: https://dev.azure.com/swellaby/OpenSource/_build/latest?definitionId=91
 [coverage-badge]: https://img.shields.io/azure-devops/coverage/swellaby/opensource/91/master?style=flat-square
 [coverage-url]: https://codecov.io/gh/swellaby/letra
