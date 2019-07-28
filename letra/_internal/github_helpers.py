@@ -58,7 +58,7 @@ def get_throttle_reset_message(end_epoch):
     return f"{base_message} unknown"
 
 
-def handle_github_api_forbidden_response(
+def raise_github_unauthorized_error(
     response: HttpJsonResponse,
     owner: str,
     repository: str,
@@ -82,7 +82,7 @@ def handle_github_api_forbidden_response(
                 )
             )
 
-        raise IOError((f"{throttling_err} {throttle_end_message}"))
+        raise IOError(f"{throttling_err}{throttle_end_message}")
 
     raise IOError(
         f"Not authorized to access GitHub repository: {owner}/{repository}"
@@ -113,7 +113,7 @@ def check_github_api_response_for_errors(
         )
 
     if status_code == 403:
-        handle_github_api_forbidden_response(
+        raise_github_unauthorized_error(
             response=response, request_headers=request_headers
         )
 
