@@ -1,5 +1,7 @@
+from collections import namedtuple
 from aiohttp import ClientSession
-from .http_response import HttpJsonResponse
+
+HttpJsonResponse = namedtuple("HttpJsonResponse", "status, headers, data")
 
 
 async def request_json(

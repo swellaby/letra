@@ -1,0 +1,2 @@
+class LabelTemplateCreationError(Exception):
+    pass
