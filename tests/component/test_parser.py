@@ -1,5 +1,5 @@
 # from letra._parser import extract_labels, validate_label
-# from test.helpers import (
+# from tests.helpers import (
 #     build_invalid_color_schema_error,
 #     missing_name_schema_error,
 #     stub_empty_template_file_contents,

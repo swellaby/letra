@@ -1,6 +1,6 @@
 import pytest
 from letra._internal.http_helpers import request_json
-from test.helpers import build_async_http_mock, stub_template_file_contents
+from tests.helpers import build_async_http_mock, stub_template_file_contents
 
 pytestmark = pytest.mark.asyncio
 request_mock_target = "letra._internal.http_helpers.ClientSession.request"

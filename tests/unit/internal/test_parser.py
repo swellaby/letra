@@ -1,6 +1,6 @@
 from letra._internal.parser import extract_labels, extract_label
 from schema import SchemaError
-from test.helpers import (
+from tests.helpers import (
     bug_label,
     bug_label_contents,
     build_invalid_label_template_error,

@@ -4,7 +4,7 @@ from letra._internal.yaml import (
     write as write_yaml,
 )
 from yaml import FullLoader, YAMLError, Dumper
-from test.helpers import (
+from tests.helpers import (
     bug_label_contents,
     stub_context_manager,
     stub_labels,

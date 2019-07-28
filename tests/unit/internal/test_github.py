@@ -4,8 +4,7 @@ from letra._internal.github import (
     get_headers,
     get_labels_from_repository,
 )
-from letra._internal.http_response import HttpJsonResponse
-from test.helpers import stub_request_json_response, stub_labels
+from tests.helpers import stub_request_json_response, stub_labels
 
 async_test = pytest.mark.asyncio
 sut_module_target = "letra._internal.github"

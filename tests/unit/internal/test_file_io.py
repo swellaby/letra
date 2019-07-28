@@ -4,7 +4,7 @@ from letra._internal.file_io import (
     write_templates_to_file,
 )
 from yaml import FullLoader, YAMLError
-from test.helpers import (
+from tests.helpers import (
     stub_labels,
     mock_empty,
     mock_false,
