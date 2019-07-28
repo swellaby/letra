@@ -7,7 +7,7 @@ from tests.helpers import stub_request_json_response, stub_labels
 
 sut_module_target = "letra._internal.github"
 
-async_test = pytest.mark.asyncio
+pytestmark = pytest.mark.asyncio
 request_json_mock_target = f"{sut_module_target}.request_json"
 extract_labels_mock_target = f"{sut_module_target}.extract_labels"
 get_base_url_mock_target = f"{sut_module_target}.get_base_label_api_url"
@@ -17,7 +17,7 @@ exp_base_url = "https://api.github.com/repos/badges/shields/labels"
 exp_default_headers = {}
 
 
-def test_get_base_label_api_url_returns_correct_url():
+async def test_get_base_label_api_url_returns_correct_url():
     url = get_base_label_api_url(owner="badges", repository="shields")
     assert url == exp_base_url
 
@@ -27,7 +27,6 @@ def stub_helper_functions(monkeypatch, url, headers):
     monkeypatch.setattr(get_headers_mock_target, lambda *y: headers)
 
 
-@async_test
 async def test_get_labels_from_repository_passes_correct_args_to_request_json(
     monkeypatch
 ):
