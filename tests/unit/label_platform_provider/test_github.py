@@ -1,13 +1,13 @@
-import pytest
-from letra._internal.github import (
+from pytest import mark, raises
+from letra._label_platform_provider.github import (
     get_base_label_api_url,
     get_labels_from_repository,
 )
 from tests.helpers import stub_request_json_response, stub_labels
 
-sut_module_target = "letra._internal.github"
+sut_module_target = "letra._label_platform_provider.github"
 
-pytestmark = pytest.mark.asyncio
+pytestmark = mark.asyncio
 request_json_mock_target = f"{sut_module_target}.request_json"
 extract_labels_mock_target = f"{sut_module_target}.extract_labels"
 get_base_url_mock_target = f"{sut_module_target}.get_base_label_api_url"

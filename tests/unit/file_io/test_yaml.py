@@ -1,4 +1,4 @@
-from letra._internal.yaml import (
+from letra._file_io.yaml import (
     read as read_yaml,
     represent_label,
     write as write_yaml,
@@ -14,6 +14,10 @@ from tests.helpers import (
 from pytest import raises
 
 file_name = "templates.yml"
+sut_module_target = "letra._file_io.yaml"
+load_mock_target = f"{sut_module_target}.load"
+dump_mock_target = f"{sut_module_target}.dump"
+open_mock_target = "builtins.open"
 
 
 def test_read_loads_file_contents(monkeypatch):
@@ -28,8 +32,8 @@ def test_read_loads_file_contents(monkeypatch):
         assert Loader == FullLoader
         return stub_labels
 
-    monkeypatch.setattr("builtins.open", mock_open)
-    monkeypatch.setattr("letra._internal.yaml.load", mock_load)
+    monkeypatch.setattr(open_mock_target, mock_open)
+    monkeypatch.setattr(load_mock_target, mock_load)
     labels = read_yaml(file_name)
     assert labels == stub_labels
 
@@ -38,7 +42,7 @@ def test_read_raises_error_when_file_does_not_exist(monkeypatch):
     def mock_raise(_):
         raise FileNotFoundError()
 
-    monkeypatch.setattr("builtins.open", mock_raise)
+    monkeypatch.setattr(open_mock_target, mock_raise)
 
     with raises(FileNotFoundError):
         read_yaml("")
@@ -48,8 +52,8 @@ def test_read_raises_value_error_when_yaml_file_not_parseable(monkeypatch):
     def mock_load(stream, Loader):
         raise YAMLError
 
-    monkeypatch.setattr("builtins.open", lambda x: stub_context_manager)
-    monkeypatch.setattr("letra._internal.yaml.load", mock_load)
+    monkeypatch.setattr(open_mock_target, lambda x: stub_context_manager)
+    monkeypatch.setattr(load_mock_target, mock_load)
 
     with raises(ValueError) as err:
         read_yaml("")
@@ -67,7 +71,7 @@ def test_write_raises_value_error_when_yaml_file_not_parseable(monkeypatch):
         act_mode = mode
         raise OSError()
 
-    monkeypatch.setattr("builtins.open", mock_raise)
+    monkeypatch.setattr(open_mock_target, mock_raise)
 
     with raises(OSError):
         write_yaml(stub_labels, file_name)
@@ -89,8 +93,8 @@ def test_write_dumps_values_when_file_exists(monkeypatch):
         act_dumper = Dumper
         act_sort = sort_keys
 
-    monkeypatch.setattr("builtins.open", lambda *unused: stub_context_manager)
-    monkeypatch.setattr("letra._internal.yaml.dump", mock_dump)
+    monkeypatch.setattr(open_mock_target, lambda *unused: stub_context_manager)
+    monkeypatch.setattr(dump_mock_target, mock_dump)
     write_yaml(stub_labels, file_name)
     assert act_labels == stub_labels
     assert act_stream == stub_stream
@@ -104,7 +108,7 @@ def test_represent_label_returns_correct_value(monkeypatch):
         "description": bug_label.description,
         "color": bug_label.color,
     }
-    exp_tag = u"tag:yaml.org,2002:map"
+    exp_tag = "tag:yaml.org,2002:map"
     act_tag = ""
     act_data = ""
 

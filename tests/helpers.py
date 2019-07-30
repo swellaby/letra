@@ -1,6 +1,6 @@
 from letra import Label
-from letra._internal.parser import color_regex
-from letra._internal.http_helpers import HttpJsonResponse
+from letra._parser import color_regex
+from letra._label_platform_provider.http_helpers import HttpJsonResponse
 from io import StringIO, TextIOWrapper
 from string import Template
 

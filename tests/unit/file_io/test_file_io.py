@@ -1,4 +1,4 @@
-from letra._internal.file_io import (
+from letra._file_io.file_io import (
     read_templates_from_file,
     get_path_for_read,
     get_path_for_write,
@@ -14,7 +14,7 @@ from tests.helpers import (
 )
 from pytest import raises
 
-sut_module_target = "letra._internal.file_io"
+sut_module_target = "letra._file_io.file_io"
 path_exists_mock_target = f"{sut_module_target}.path_exists"
 getcwd_mock_target = f"{sut_module_target}.getcwd"
 join_mock_target = f"{sut_module_target}.join"

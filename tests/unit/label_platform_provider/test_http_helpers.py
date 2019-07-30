@@ -1,9 +1,11 @@
-import pytest
-from letra._internal.http_helpers import request_json
+from pytest import mark, raises
+from letra._label_platform_provider.http_helpers import request_json
 from tests.helpers import build_async_http_mock, stub_template_file_contents
 
-pytestmark = pytest.mark.asyncio
-request_mock_target = "letra._internal.http_helpers.ClientSession.request"
+pytestmark = mark.asyncio
+request_mock_target = (
+    "letra._label_platform_provider.http_helpers.ClientSession.request"
+)
 exp_url = "https://api.github.com/repos/swellaby/letra/labels"
 exp_data = stub_template_file_contents["labels"]
 
