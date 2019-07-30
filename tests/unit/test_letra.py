@@ -153,11 +153,11 @@ async def test_create_label_template_file_returns_on_success(monkeypatch):
     )
 
 
-async def test_foo():
-    from letra import create_label_template_file
+# async def test_foo():
+#     from letra import create_label_template_file
 
-    await create_label_template_file(
-        filepath="tests/data/rusty-hook.yml",
-        owner="swellaby",
-        repository="rusty-hook",
-    )
+#     await create_label_template_file(
+#         filepath="tests/data/rusty-hook.yml",
+#         owner="swellaby",
+#         repository="rusty-hook",
+#     )
