@@ -4,7 +4,7 @@ from os.path import abspath, join, exists as path_exists
 from string import Template
 
 
-def get_path(filepath):
+def get_path_for_read(filepath):
     if path_exists(filepath):
         return filepath
     else:
@@ -19,9 +19,19 @@ def get_path(filepath):
             )
 
 
+def get_path_for_write(filepath):
+    if not filepath:
+        raise ValueError("Invalid filepath specified")
+
+    if filepath[0] == ".":
+        return abspath(join(getcwd(), filepath))
+
+    return filepath
+
+
 def read_templates_from_file(filepath):
-    return read_yaml(get_path(filepath))
+    return read_yaml(get_path_for_read(filepath))
 
 
 def write_templates_to_file(labels, filepath):
-    return write_yaml({"labels": labels}, filepath)
+    return write_yaml({"labels": labels}, get_path_for_write(filepath))

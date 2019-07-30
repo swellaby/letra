@@ -1,16 +1,17 @@
 from letra import Label
-from letra._internal.parser import color_regex
+from letra._parser import color_regex
+from letra._label_platform_provider.http_helpers import HttpJsonResponse
 from io import StringIO, TextIOWrapper
 from string import Template
 
 bug_name = "bug"
 bug_description = "Something isn't working!"
-bug_color = "#d73a4a"
+bug_color = "d73a4a"
 bug_label = Label(name=bug_name, description=bug_description, color=bug_color)
 
 other_name = "other"
 other_description = "Something different"
-other_color = "#a24b2a"
+other_color = "a24b2a"
 other_label = Label(
     name=other_name, description=other_description, color=other_color
 )
@@ -50,10 +51,21 @@ def mock_true(*unused):
 
 
 stub_stream = TextIOWrapper(StringIO("", "\n"), "utf8", "", "\n", True, True)
+stub_request_json_response = HttpJsonResponse(
+    status=200, headers={}, data=stub_template_file_contents["labels"]
+)
 
 
 def mock_stream(*unused):
     return stub_stream
+
+
+async def async_enter(self):
+    return self
+
+
+async def async_exit(self, *unused):
+    return self
 
 
 stub_context_manager = type(
@@ -61,12 +73,23 @@ stub_context_manager = type(
 )()
 
 
+def build_async_http_mock(json_content):
+    async def json(self):
+        return json_content
+
+    return type(
+        "",
+        (object,),
+        {"__aenter__": async_enter, "__aexit__": async_exit, "json": json},
+    )()
+
+
 def build_schema_failure_error_message(details):
     return (
         "Labels must conform to the schema:\n"
         "  `name`: Required - string\n"
         "  `description`: Optional - string\n"
-        "  `color`: Optional - valid hex color string\n"
+        "  `color`: Optional - valid hex color string *without the leading #\n"
         "Error details: " + details
     )
 

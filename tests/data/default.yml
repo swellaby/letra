@@ -1,7 +1,7 @@
 labels:
 - name: bug
   description: Something isn't working!
-  color: '#d73a4a'
+  color: 'd73a4a'
 - name: dependencies
   description: ''
   color: ''
