@@ -31,7 +31,7 @@ async def test_get_labels_from_repository_passes_correct_args_to_request_json(
     monkeypatch
 ):
     act_data = []
-    act_url = ("",)
+    act_url = ""
     act_verb = "post"
     act_headers = {"foo": "bar"}
     stub_helper_functions(monkeypatch, exp_base_url, exp_default_headers)
