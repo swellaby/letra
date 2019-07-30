@@ -10,12 +10,11 @@ exp_default_headers = {
 
 def get_auth_header(token):
     auth_headers = {"Authorization": f"token {token}"}
-
     auth_headers["Accept"] = exp_default_headers["Accept"]
     return auth_headers
 
 
-def test_returns_empty_headers_with_no_pat_and_optional_auth(monkeypatch):
+def test_returns_default_headers_with_no_pat_and_optional_auth(monkeypatch):
     act_var = ""
     exp_var = "LETRA_GITHUB_PAT"
 
