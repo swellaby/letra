@@ -38,7 +38,7 @@ def test_raises_value_err_with_no_pat_and_required_auth(monkeypatch):
     )
     monkeypatch.setattr(environ_get_mock_target, lambda x: None)
     with raises(ValueError) as err:
-        get_headers(token="", authRequired=True)
+        get_headers(token="", auth_required=True)
     assert str(err.value) == exp
 
 
