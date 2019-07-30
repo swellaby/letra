@@ -3,11 +3,16 @@ from tests.helpers import stub_request_json_response, stub_labels
 from . import get_headers, sut_module_target
 
 environ_get_mock_target = f"{sut_module_target}.environ.get"
-exp_default_headers = {}
+exp_default_headers = {
+    "Accept": "application/vnd.github.symmetra-preview+json"
+}
 
 
 def get_auth_header(token):
-    return {"Authorization": f"token {token}"}
+    auth_headers = {"Authorization": f"token {token}"}
+
+    auth_headers["Accept"] = exp_default_headers["Accept"]
+    return auth_headers
 
 
 def test_returns_empty_headers_with_no_pat_and_optional_auth(monkeypatch):

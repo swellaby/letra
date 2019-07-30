@@ -8,10 +8,11 @@ label_schema = Schema(
         "name": str,
         Optional("description"): str,
         Optional("color"): Regex(color_regex),
-    }
+    },
+    ignore_extra_keys=True,
 )
 
-labels_schema = Schema([label_schema])
+labels_schema = Schema([label_schema], ignore_extra_keys=True)
 
 
 def build_invalid_label_error(schema_error):

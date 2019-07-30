@@ -4,8 +4,11 @@ from .http_helpers import request_json, HttpJsonResponse
 
 
 def get_headers(token: str = "", authRequired: bool = False):
+    headers = {"Accept": "application/vnd.github.symmetra-preview+json"}
+
     def create_auth_header(pat):
-        return {"Authorization": f"token {pat}"}
+        headers["Authorization"] = f"token {pat}"
+        return headers
 
     if token:
         return create_auth_header(token)
@@ -15,7 +18,7 @@ def get_headers(token: str = "", authRequired: bool = False):
             return create_auth_header(token)
         else:
             if not authRequired:
-                return {}
+                return headers
             raise ValueError(
                 (
                     "GitHub PAT is required for operation, but no token "
