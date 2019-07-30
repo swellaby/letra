@@ -3,7 +3,7 @@ from datetime import datetime
 from .http_helpers import request_json, HttpJsonResponse
 
 
-def get_headers(token: str = "", authRequired: bool = False):
+def get_headers(token: str = "", auth_required: bool = False):
     headers = {"Accept": "application/vnd.github.symmetra-preview+json"}
 
     def create_auth_header(pat):
@@ -17,7 +17,7 @@ def get_headers(token: str = "", authRequired: bool = False):
         if token:
             return create_auth_header(token)
         else:
-            if not authRequired:
+            if not auth_required:
                 return headers
             raise ValueError(
                 (
