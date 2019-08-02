@@ -32,6 +32,7 @@ async def test_get_labels_from_repository_passes_correct_args_to_request_json(
 ):
     act_data = []
     act_url = ""
+    exp_url = f"{exp_base_url}?per_page=100"
     act_verb = "post"
     act_headers = {"foo": "bar"}
     stub_helper_functions(monkeypatch, exp_base_url, exp_default_headers)
@@ -56,6 +57,6 @@ async def test_get_labels_from_repository_passes_correct_args_to_request_json(
 
     assert labels == stub_labels
     assert act_data == {"labels": stub_request_json_response.data}
-    assert act_url == exp_base_url
+    assert act_url == exp_url
     assert act_headers == exp_default_headers
     assert act_verb == "get"
