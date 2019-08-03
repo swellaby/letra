@@ -1,1 +1,1 @@
-from .label_platform_provider import get_labels
+from .label_platform_provider import get_labels_from_github
