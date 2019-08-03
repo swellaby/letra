@@ -11,7 +11,8 @@ def get_base_label_api_url(owner: str, repository: str):
 async def get_labels_from_repository(
     owner: str, repository: str, token: str = ""
 ):
-    url = get_base_label_api_url(owner, repository)
+    base_url = get_base_label_api_url(owner, repository)
+    url = f"{base_url}?per_page=100"
     headers = get_headers(token)
     response = await request_json(url=url, http_verb="get", headers=headers)
     check_github_api_response_for_errors(
