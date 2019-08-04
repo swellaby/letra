@@ -6,7 +6,7 @@ from letra.letra import (
     create_label_template_file_from_github,
     _retrieve_labels,
 )
-from letra import LabelTemplateCreationError
+from letra import LabelTemplateCreationError, TemplateFileFormat
 from tests.helpers import stub_labels
 
 pytestmark = mark.asyncio
@@ -26,6 +26,7 @@ target_file_name = "templates.yml"
 target_owner = "swellaby"
 target_repository = "letra"
 exp_gh_target_name = "GitHub"
+exp_default_label_template_format = TemplateFileFormat.YAML
 
 
 def get_label_retrieval_input_error(target, details):
@@ -119,7 +120,7 @@ async def test_create_label_template_file_raises_err_on_invalid_filepath(
         f"Error details: {exp_err_details}"
     )
 
-    def mock_write_templates_to_file(filepath: str, labels):
+    def mock_write_templates_to_file(filepath: str, labels, template_format):
         nonlocal act_filepath, act_labels
         act_filepath = filepath
         act_labels = labels
@@ -148,7 +149,7 @@ async def test_create_label_template_file_raises_err_on_file_write_err(
         f"Error details: {exp_err_details}"
     )
 
-    def mock_write_templates_to_file(filepath: str, labels):
+    def mock_write_templates_to_file(filepath: str, labels, template_format):
         raise IOError(exp_err_details)
 
     monkeypatch.setattr(
@@ -163,6 +164,47 @@ async def test_create_label_template_file_raises_err_on_file_write_err(
     assert str(err.value) == exp_err
 
 
+async def test_create_label_template_file_uses_correct_default_format(
+    monkeypatch
+):
+    act_format = None
+
+    def mock_write_templates_to_file(filepath: str, labels, template_format):
+        nonlocal act_format
+        act_format = template_format
+
+    monkeypatch.setattr(
+        write_templates_to_file_mock_target, mock_write_templates_to_file
+    )
+
+    await create_label_template_file(
+        labels=stub_labels, filepath=target_file_name
+    )
+
+    assert act_format == exp_default_label_template_format
+
+
+async def test_create_label_template_file_uses_specified_format(monkeypatch):
+    act_format = None
+    exp_format = TemplateFileFormat.JSON
+
+    def mock_write_templates_to_file(filepath: str, labels, template_format):
+        nonlocal act_format
+        act_format = template_format
+
+    monkeypatch.setattr(
+        write_templates_to_file_mock_target, mock_write_templates_to_file
+    )
+
+    await create_label_template_file(
+        labels=stub_labels,
+        filepath=target_file_name,
+        template_format=exp_format,
+    )
+
+    assert act_format == exp_format
+
+
 async def test__create_label_template_file_uses_right_args(monkeypatch):
     act_get_labels = None
     act_labels = None
@@ -171,6 +213,8 @@ async def test__create_label_template_file_uses_right_args(monkeypatch):
     act_owner = ""
     act_repository = ""
     act_token = ""
+    act_format = None
+    exp_format = TemplateFileFormat.TOML
     exp_token = "000lmn234"
 
     async def mock_retrieve_labels(**kwargs):
@@ -185,10 +229,13 @@ async def test__create_label_template_file_uses_right_args(monkeypatch):
 
         return stub_labels
 
-    async def mock_create_template_file(filepath: str, labels: list):
-        nonlocal act_labels, act_filepath
+    async def mock_create_template_file(
+        filepath: str, labels: list, template_format: TemplateFileFormat
+    ):
+        nonlocal act_labels, act_filepath, act_format
         act_filepath = filepath
         act_labels = labels
+        act_format = template_format
 
     async def mock_get_labels(**kwargs):
         pass
@@ -206,6 +253,7 @@ async def test__create_label_template_file_uses_right_args(monkeypatch):
             owner=target_owner,
             repository=target_repository,
             token=exp_token,
+            template_format=exp_format,
         )
         is None
     )
@@ -216,6 +264,7 @@ async def test__create_label_template_file_uses_right_args(monkeypatch):
     assert act_owner == target_owner
     assert act_repository == target_repository
     assert act_token == exp_token
+    assert act_format == exp_format
 
 
 async def test_create_label_template_file_from_github_uses_right_args(
@@ -227,11 +276,13 @@ async def test_create_label_template_file_from_github_uses_right_args(
     act_owner = ""
     act_repository = ""
     act_token = ""
+    act_format = None
+    exp_format = TemplateFileFormat.TOML
     exp_token = "987zyx654"
 
     async def mock_create_label_template_file(**kwargs):
         nonlocal act_get_labels, act_filepath, act_target_name
-        nonlocal act_owner, act_repository, act_token
+        nonlocal act_owner, act_repository, act_token, act_format
 
         act_get_labels = kwargs.get("get_labels")
         act_filepath = kwargs.get("filepath")
@@ -239,6 +290,7 @@ async def test_create_label_template_file_from_github_uses_right_args(
         act_owner = kwargs.get("owner")
         act_repository = kwargs.get("repository")
         act_token = kwargs.get("token")
+        act_format = kwargs.get("template_format")
 
     monkeypatch.setattr(
         _create_label_template_file_mock_target,
@@ -261,3 +313,51 @@ async def test_create_label_template_file_from_github_uses_right_args(
     assert act_owner == target_owner
     assert act_repository == target_repository
     assert act_token == exp_token
+
+
+async def test_create_label_template_file_from_github_uses_default_format(
+    monkeypatch
+):
+    act_format = None
+
+    async def mock_create_label_template_file(**kwargs):
+        nonlocal act_format
+        act_format = kwargs.get("template_format")
+
+    monkeypatch.setattr(
+        _create_label_template_file_mock_target,
+        mock_create_label_template_file,
+    )
+
+    await create_label_template_file_from_github(
+        filepath=target_file_name,
+        owner=target_owner,
+        repository=target_repository,
+    )
+
+    assert act_format == exp_default_label_template_format
+
+
+async def test_create_label_template_file_from_github_uses_specified_format(
+    monkeypatch
+):
+    act_format = None
+    exp_format = TemplateFileFormat.TOML
+
+    async def mock_create_label_template_file(**kwargs):
+        nonlocal act_format
+        act_format = kwargs.get("template_format")
+
+    monkeypatch.setattr(
+        _create_label_template_file_mock_target,
+        mock_create_label_template_file,
+    )
+
+    await create_label_template_file_from_github(
+        filepath=target_file_name,
+        owner=target_owner,
+        repository=target_repository,
+        template_format=exp_format,
+    )
+
+    assert act_format == exp_format

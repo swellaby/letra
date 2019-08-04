@@ -1,7 +1,6 @@
 from .github import (
     get_labels_from_repository as get_labels_from_github_repository,
 )
-from letra import LabelPlatformType
 
 
 async def get_labels_from_github(owner: str, repository: str, token: str = ""):

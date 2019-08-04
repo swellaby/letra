@@ -1,4 +1,5 @@
 from .yaml import read as read_yaml, write as write_yaml
+from . import TemplateFileFormat
 from os import getcwd
 from os.path import abspath, join, exists as path_exists
 from string import Template
@@ -29,9 +30,15 @@ def get_path_for_write(filepath):
     return filepath
 
 
-def read_templates_from_file(filepath):
+def read_templates_from_file(
+    filepath, template_format: TemplateFileFormat = TemplateFileFormat.YAML
+):
     return read_yaml(get_path_for_read(filepath))
 
 
-def write_templates_to_file(labels, filepath):
+def write_templates_to_file(
+    labels,
+    filepath,
+    template_format: TemplateFileFormat = TemplateFileFormat.YAML,
+):
     return write_yaml({"labels": labels}, get_path_for_write(filepath))

@@ -1,12 +1,20 @@
 from ._file_io import write_templates_to_file
 from ._label_platform_provider import get_labels_from_github
-from letra import LabelTemplateCreationError, Label
+from letra import Label, LabelTemplateCreationError, TemplateFileFormat
 from typing import List
 
+__default_label_template_format = TemplateFileFormat.YAML
 
-async def create_label_template_file(labels: List[Label], filepath: str):
+
+async def create_label_template_file(
+    labels: List[Label],
+    filepath: str,
+    template_format: TemplateFileFormat = __default_label_template_format,
+):
     try:
-        write_templates_to_file(labels=labels, filepath=filepath)
+        write_templates_to_file(
+            labels=labels, filepath=filepath, template_format=template_format
+        )
     except ValueError as err:
         raise LabelTemplateCreationError(
             (
@@ -24,9 +32,9 @@ async def create_label_template_file(labels: List[Label], filepath: str):
 
 
 async def _retrieve_labels(get_labels, target_name: str, **kwargs):
-    labels = None
     try:
         labels = await get_labels(**kwargs)
+        return labels
     except ValueError as err:
         details = str(err)
         msg = (
@@ -42,24 +50,33 @@ async def _retrieve_labels(get_labels, target_name: str, **kwargs):
         )
         raise LabelTemplateCreationError(msg)
 
-    return labels
-
 
 async def _create_label_template_file(
-    get_labels, filepath: str, target_name: str, **kwargs
+    get_labels,
+    filepath: str,
+    target_name: str,
+    template_format: TemplateFileFormat,
+    **kwargs,
 ):
     labels = await _retrieve_labels(
         get_labels=get_labels, target_name=target_name, **kwargs
     )
-    await create_label_template_file(filepath=filepath, labels=labels)
+    await create_label_template_file(
+        filepath=filepath, labels=labels, template_format=template_format
+    )
 
 
 async def create_label_template_file_from_github(
-    filepath: str, owner: str, repository: str, token: str = ""
+    filepath: str,
+    owner: str,
+    repository: str,
+    token: str = "",
+    template_format: TemplateFileFormat = __default_label_template_format,
 ):
     await _create_label_template_file(
         get_labels=get_labels_from_github,
         filepath=filepath,
+        template_format=template_format,
         target_name="GitHub",
         owner=owner,
         repository=repository,
