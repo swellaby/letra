@@ -5,12 +5,16 @@ HttpJsonResponse = namedtuple("HttpJsonResponse", "status, headers, data")
 
 
 async def request_json(
-    url: str, http_verb: str = "get", headers: dict = {}, **kwargs
+    url: str,
+    http_verb: str = "get",
+    headers: dict = {},
+    json: dict = {},
+    **kwargs
 ):
     headers["User-Agent"] = "letra"
     async with ClientSession(headers=headers) as session:
         async with session.request(
-            method=http_verb, url=url, **kwargs
+            method=http_verb, url=url, json=json, **kwargs
         ) as response:
             status = response.status
             resp_headers = response.headers
