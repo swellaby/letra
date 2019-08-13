@@ -1,4 +1,5 @@
-from letra._parser import extract_labels, extract_label
+from letra._parser import parse_label, extract_labels, extract_label
+from letra import Label
 from schema import SchemaError
 from tests.helpers import (
     bug_label,
@@ -73,3 +74,32 @@ def test_extract_labels_returns_labels_when_template_is_valid(monkeypatch):
     monkeypatch.setattr(labels_schema_mock_target, mock_validate)
     labels = extract_labels(stub_template_file_contents)
     assert labels == stub_labels
+
+
+def test_parse_label_passes_correct_object(monkeypatch):
+    act_label_param = None
+    label_name = "bug"
+    label_color = "ffffff"
+    label_description = "bad things happened"
+    exp_label = Label(
+        name=label_name, description=label_description, color=label_color
+    )
+
+    def mock_extract_label(label):
+        nonlocal act_label_param
+        act_label_param = label
+        return exp_label
+
+    monkeypatch.setattr(
+        f"{sut_module_target}.extract_label", mock_extract_label
+    )
+    act_label = parse_label(
+        name=label_name, description=label_description, color=label_color
+    )
+
+    assert act_label == exp_label
+    assert act_label_param == {
+        "name": label_name,
+        "description": label_description,
+        "color": label_color,
+    }

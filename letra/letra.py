@@ -1,9 +1,19 @@
 from ._file_io import write_templates_to_file
-from ._label_platform_provider import get_labels_from_github
-from letra import Label, LabelTemplateCreationError, TemplateFileFormat
+from ._label_platform_provider import (
+    create_label_in_github_repository as _create_label_in_github_repository,
+    get_labels_from_github,
+)
+from letra import (
+    Label,
+    LabelCreationError,
+    LabelTemplateCreationError,
+    TemplateFileFormat,
+)
 from typing import List
+from ._parser import parse_label as _parse_label
 
 __default_label_template_format = TemplateFileFormat.YAML
+__github_target = "GitHub"
 
 
 async def create_label_template_file(
@@ -77,8 +87,60 @@ async def create_label_template_file_from_github(
         get_labels=get_labels_from_github,
         filepath=filepath,
         template_format=template_format,
-        target_name="GitHub",
+        target_name=__github_target,
         owner=owner,
         repository=repository,
+        token=token,
+    )
+
+
+async def _create_label(
+    create_label,
+    target_name: str,
+    label_name: str,
+    label_color: str,
+    label_description: str,
+    **kwargs,
+):
+    label = None
+    try:
+        label = _parse_label(
+            name=label_name, color=label_color, description=label_description
+        )
+    except ValueError as err:
+        details = str(err)
+        msg = (
+            f"Unable to create label in {target_name} due to invalid "
+            f"inputs. Error details: {details}"
+        )
+        raise LabelCreationError(msg)
+
+    try:
+        await create_label(label=label, **kwargs)
+    except Exception as err:
+        details = str(err)
+        msg = (
+            "Encountered error while attempting to create "
+            f"label in {target_name}. Error details: {details}"
+        )
+        raise LabelCreationError(msg)
+
+
+async def create_github_label(
+    owner: str,
+    repository: str,
+    label_name: str,
+    label_color: str,
+    label_description: str = "",
+    token: str = "",
+):
+    await _create_label(
+        create_label=_create_label_in_github_repository,
+        target_name=__github_target,
+        owner=owner,
+        repository=repository,
+        label_name=label_name,
+        label_color=label_color,
+        label_description=label_description,
         token=token,
     )

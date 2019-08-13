@@ -19,8 +19,8 @@ def build_invalid_label_error(schema_error):
     return (
         "Labels must conform to the schema:\n"
         "  `name`: Required - string\n"
+        "  `color`: Required - valid hex color string *without the leading #\n"
         "  `description`: Optional - string\n"
-        "  `color`: Optional - valid hex color string *without the leading #\n"
         "Error details: " + schema_error.autos[-1]
     )
 
@@ -35,6 +35,12 @@ def extract_label(label):
         name=label["name"],
         description=label["description"],
         color=label["color"],
+    )
+
+
+def parse_label(name: str, color: str, description: str):
+    return extract_label(
+        {"name": name, "color": color, "description": description}
     )
 
 

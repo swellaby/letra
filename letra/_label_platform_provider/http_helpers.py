@@ -9,7 +9,7 @@ async def request_json(
     http_verb: str = "get",
     headers: dict = {},
     json: dict = {},
-    **kwargs
+    **kwargs,
 ):
     headers["User-Agent"] = "letra"
     async with ClientSession(headers=headers) as session:

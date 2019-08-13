@@ -1,4 +1,5 @@
 from .github import (
+    create_label as create_label_in_github_repository,
     get_labels_from_repository as get_labels_from_github_repository,
 )
 

@@ -12,6 +12,7 @@
     "codecov",
     "coveragerc",
     "coverageresults",
+    "dependabot",
     "filterwarnings",
     "getcwd",
     "junit",
