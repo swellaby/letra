@@ -88,8 +88,8 @@ def build_schema_failure_error_message(details):
     return (
         "Labels must conform to the schema:\n"
         "  `name`: Required - string\n"
+        "  `color`: Required - valid hex color string *without the leading #\n"
         "  `description`: Optional - string\n"
-        "  `color`: Optional - valid hex color string *without the leading #\n"
         "Error details: " + details
     )
 

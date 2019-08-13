@@ -15,7 +15,7 @@ async def test_request_json_uses_get_verb_by_default(monkeypatch):
     act_verb = "post"
     exp_status = 200
 
-    def mock_client_get(*args, method: str, url: str):
+    def mock_client_get(*args, method: str, url: str, **kwargs):
         nonlocal act_url, act_verb
         act_verb = method
         act_url = url
@@ -43,7 +43,7 @@ async def test_request_json_uses_specified_verb_and_headers(monkeypatch):
         "User-Agent": "letra",
     }
 
-    def mock_client_get(*args, method: str, url: str):
+    def mock_client_get(*args, method: str, url: str, **kwargs):
         nonlocal act_verb
         act_verb = method
         mock_response = build_async_http_mock(exp_data)

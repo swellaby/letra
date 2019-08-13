@@ -1,13 +1,22 @@
 from pytest import mark, raises
 from letra.letra import (
     get_labels_from_github,
+    _create_label,
+    create_github_label,
     _create_label_template_file,
+    create_github_label,
+    _create_label_in_github_repository,
     create_label_template_file,
     create_label_template_file_from_github,
     _retrieve_labels,
 )
-from letra import LabelTemplateCreationError, TemplateFileFormat
-from tests.helpers import stub_labels
+from letra import (
+    Label,
+    LabelCreationError,
+    LabelTemplateCreationError,
+    TemplateFileFormat,
+)
+from tests.helpers import stub_labels, build_schema_failure_error_message
 
 pytestmark = mark.asyncio
 sut_module_target = "letra.letra"
@@ -22,6 +31,11 @@ create_label_template_file_mock_target = (
     f"{sut_module_target}.create_label_template_file"
 )
 _retrieve_labels_mock_target = f"{sut_module_target}._retrieve_labels"
+_create_label_in_github_repository_mock_target = (
+    f"{sut_module_target}._create_label_in_github_repository"
+)
+_parse_label_mock_target = f"{sut_module_target}._parse_label"
+_create_label_mock_target = f"{sut_module_target}._create_label"
 target_file_name = "templates.yml"
 target_owner = "swellaby"
 target_repository = "letra"
@@ -40,6 +54,20 @@ def get_label_retrieval_failure_error(target, details):
     return (
         "Encountered error while attempting to retrieve "
         f"labels from {target}. Error details: {details}"
+    )
+
+
+def get_parse_label_validation_error(target, details):
+    return (
+        f"Unable to create label in {target} due to invalid "
+        f"inputs. Error details: {details}"
+    )
+
+
+def get_label_creation_io_error(target, details):
+    return (
+        "Encountered error while attempting to create "
+        f"label in {target}. Error details: {details}"
     )
 
 
@@ -361,3 +389,204 @@ async def test_create_label_template_file_from_github_uses_specified_format(
     )
 
     assert act_format == exp_format
+
+
+async def test__create_label_raises_err_on_validation_failure(monkeypatch):
+    act_name = ""
+    act_description = ""
+    act_color = ""
+    exp_err_details = build_schema_failure_error_message("invalid color")
+    exp_err = get_parse_label_validation_error(
+        target=exp_gh_target_name, details=exp_err_details
+    )
+    exp_name = "feature request"
+    exp_description = "some cool new thing"
+    exp_color = "0246cc"
+
+    def mock_parse_label(name, description, color):
+        nonlocal act_name, act_description, act_color
+        act_name = name
+        act_description = description
+        act_color = color
+        raise ValueError(exp_err_details)
+
+    async def mock_create_github_label(**kwargs):
+        pass
+
+    monkeypatch.setattr(_parse_label_mock_target, mock_parse_label)
+
+    with raises(LabelCreationError) as err:
+        await _create_label(
+            create_label=mock_create_github_label,
+            target_name=exp_gh_target_name,
+            owner="",
+            repository="",
+            label_name=exp_name,
+            label_color=exp_color,
+            label_description=exp_description,
+        )
+
+    assert str(err.value) == exp_err
+    assert act_name == exp_name
+    assert act_color == exp_color
+    assert act_description == exp_description
+
+
+async def test__create_label_raises_err_on_io_failure(monkeypatch):
+    act_label = ""
+    act_owner = ""
+    act_repository = ""
+    act_token = ""
+    exp_err_details = "unauthorized"
+    exp_err = get_label_creation_io_error(
+        target=exp_gh_target_name, details=exp_err_details
+    )
+    exp_token = "password ;)"
+    exp_name = "question"
+    exp_description = "what is your favorite color?"
+    exp_color = "842fe3"
+    exp_label = Label(
+        name=exp_name, description=exp_description, color=exp_color
+    )
+
+    def mock_parse_label(**kwargs):
+        return exp_label
+
+    async def mock_create_github_label(label, owner, repository, token):
+        nonlocal act_label, act_owner, act_repository, act_token
+        act_label = label
+        act_owner = owner
+        act_repository = repository
+        act_token = token
+        raise IOError(exp_err_details)
+
+    monkeypatch.setattr(_parse_label_mock_target, mock_parse_label)
+
+    with raises(LabelCreationError) as err:
+        await _create_label(
+            create_label=mock_create_github_label,
+            target_name=exp_gh_target_name,
+            owner=target_owner,
+            repository=target_repository,
+            label_name=exp_name,
+            label_color=exp_color,
+            label_description=exp_description,
+            token=exp_token,
+        )
+
+    assert str(err.value) == exp_err
+    assert act_label == exp_label
+    assert act_owner == target_owner
+    assert act_repository == target_repository
+    assert act_token == exp_token
+
+
+async def test__create_label_returns_on_success(monkeypatch):
+    async def mock_create_github_label(**kwargs):
+        pass
+
+    monkeypatch.setattr(
+        _parse_label_mock_target, lambda **kwargs: stub_labels[0]
+    )
+    monkeypatch.setattr(
+        _create_label_in_github_repository_mock_target,
+        mock_create_github_label,
+    )
+
+    assert (
+        await _create_label(
+            create_label=mock_create_github_label,
+            target_name=exp_gh_target_name,
+            owner=target_owner,
+            repository=target_repository,
+            label_name="",
+            label_color="",
+            label_description="",
+        )
+        is None
+    )
+
+
+async def test_create_label_uses_correct_args(monkeypatch):
+    act_owner = ""
+    act_repository = ""
+    act_token = ""
+    act_name = ""
+    act_description = ""
+    act_color = ""
+    act_target = ""
+    act_label_creator = None
+    exp_token = "123"
+    exp_name = "dependencies"
+    exp_description = "dependabot"
+    exp_color = "016746"
+
+    async def mock__create_label(
+        create_label,
+        target_name: str,
+        owner: str,
+        repository: str,
+        token: str,
+        label_name: str,
+        label_color: str,
+        label_description: str,
+    ):
+        nonlocal act_owner, act_repository, act_token
+        nonlocal act_name, act_description, act_color
+        nonlocal act_target, act_label_creator
+        act_owner = owner
+        act_repository = repository
+        act_token = token
+        act_name = label_name
+        act_color = label_color
+        act_description = label_description
+        act_label_creator = create_label
+        act_target = target_name
+
+    monkeypatch.setattr(_create_label_mock_target, mock__create_label)
+
+    assert (
+        await create_github_label(
+            owner=target_owner,
+            repository=target_repository,
+            label_name=exp_name,
+            label_color=exp_color,
+            label_description=exp_description,
+            token=exp_token,
+        )
+        is None
+    )
+
+    assert act_owner == target_owner
+    assert act_repository == target_repository
+    assert act_token == exp_token
+    assert act_name == exp_name
+    assert act_color == exp_color
+    assert act_description == exp_description
+    assert act_label_creator == _create_label_in_github_repository
+    assert act_target == exp_gh_target_name
+
+
+async def test_create_label_uses_correct_defaults(monkeypatch):
+    act_token = ""
+    act_description = ""
+
+    async def mock__create_label(token: str, label_description: str, **kwargs):
+        nonlocal act_description, act_token
+        act_token = token
+        act_description = label_description
+
+    monkeypatch.setattr(_create_label_mock_target, mock__create_label)
+
+    assert (
+        await create_github_label(
+            owner=target_owner,
+            repository=target_repository,
+            label_name="",
+            label_color="",
+        )
+        is None
+    )
+
+    assert act_token == ""
+    assert act_description == ""
