@@ -13,6 +13,10 @@ resources:
     name: swellaby/azure-pipelines-templates
     endpoint: swellaby
 
+variables:
+- group: swellbot-github
+- group: letra
+
 steps:
 - template: templates/yml/python/combo/setup-pip.yml@templates
   parameters:
@@ -45,6 +49,13 @@ steps:
     bash <(curl -s https://codecov.io/bash) -t $(codecovToken)
   displayName: 'Publish coverage to Codecov'
 
+- script: |
+    git checkout master
+    git config user.name $(githubUser)
+    git config user.email $(githubEmail)
+    bumpversion patch
+  displayName: 'Bump version'
+
 - bash: |
     export PACKAGE_VERSION=$(invoke print-version)
     echo "##vso[task.setvariable variable=packageVersion]$PACKAGE_VERSION"
@@ -64,4 +75,22 @@ steps:
 
 - task: SonarSource.sonarcloud.38b27399-a642-40af-bb7d-9971f69712e8.SonarCloudPublish@1
   displayName: 'Publish quality gate result'
+
+- script: |
+    git push https://$(githubPat)@github.com/swellaby/letra.git
+  displayName: 'Check-in bumped version files'
+
+- task: ArchiveFiles@2
+  displayName: 'Archive: full repo'
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: false
+    archiveType: tar
+    archiveFile: '$(repoArchivePath)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: full repo'
+  inputs:
+    PathtoPublish: '$(repoArchivePath)'
+    ArtifactName: '$(repoArtifactName)'
 
