@@ -30,7 +30,7 @@ def stub_helper_functions(monkeypatch, url, headers):
 
 
 async def test_get_labels_from_repository_passes_correct_args_to_request_json(
-    monkeypatch
+    monkeypatch,
 ):
     act_data = []
     act_url = ""

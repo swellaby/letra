@@ -52,7 +52,7 @@ def test_raises_correct_error_with_rate_limit_above_zero():
 
 
 def test_raises_correct_error_with_rate_limit_when_request_has_auth(
-    monkeypatch
+    monkeypatch,
 ):
     exp_err = f"{throttling_err_message_prefix}{throttling_err_message}"
     exp_epoch = 1372799123
@@ -80,7 +80,7 @@ def test_raises_correct_error_with_rate_limit_when_request_has_auth(
 
 
 def test_raises_correct_error_with_rate_limit_when_request_missing_auth(
-    monkeypatch
+    monkeypatch,
 ):
     exp_err = (
         f"{throttling_err_message_prefix}"

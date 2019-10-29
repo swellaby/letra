@@ -14,7 +14,7 @@ get_from_github_mock_target = (
 
 
 async def test_get_labels_from_github_retrieves_labels_when_params_valid(
-    monkeypatch
+    monkeypatch,
 ):
     act_owner = ""
     act_repository = ""
