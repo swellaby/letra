@@ -138,7 +138,7 @@ async def test__retrieve_labels_returns_labels_on_success():
 
 
 async def test_create_label_template_file_raises_err_on_invalid_filepath(
-    monkeypatch
+    monkeypatch,
 ):
     act_filepath = None
     act_labels = None
@@ -169,7 +169,7 @@ async def test_create_label_template_file_raises_err_on_invalid_filepath(
 
 
 async def test_create_label_template_file_raises_err_on_file_write_err(
-    monkeypatch
+    monkeypatch,
 ):
     exp_err_details = "no permissions"
     exp_err = (
@@ -193,7 +193,7 @@ async def test_create_label_template_file_raises_err_on_file_write_err(
 
 
 async def test_create_label_template_file_uses_correct_default_format(
-    monkeypatch
+    monkeypatch,
 ):
     act_format = None
 
@@ -296,7 +296,7 @@ async def test__create_label_template_file_uses_right_args(monkeypatch):
 
 
 async def test_create_label_template_file_from_github_uses_right_args(
-    monkeypatch
+    monkeypatch,
 ):
     act_get_labels = None
     act_filepath = ""
@@ -344,7 +344,7 @@ async def test_create_label_template_file_from_github_uses_right_args(
 
 
 async def test_create_label_template_file_from_github_uses_default_format(
-    monkeypatch
+    monkeypatch,
 ):
     act_format = None
 
@@ -367,7 +367,7 @@ async def test_create_label_template_file_from_github_uses_default_format(
 
 
 async def test_create_label_template_file_from_github_uses_specified_format(
-    monkeypatch
+    monkeypatch,
 ):
     act_format = None
     exp_format = TemplateFileFormat.TOML

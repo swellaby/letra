@@ -84,7 +84,7 @@ def test_get_path_for_write_raises_err_on_invalid_filepath():
 
 
 def test_get_path_for_write_returns_correct_path_on_relative_filepath(
-    monkeypatch
+    monkeypatch,
 ):
     def mock_join(a, b):
         assert a == cwd
