@@ -6,10 +6,8 @@ def read(filepath):
     try:
         with open(filepath) as stream:
             return load(stream, Loader=FullLoader)
-    except YAMLError as err:
+    except YAMLError:
         raise ValueError("Specified template file is not valid yaml")
-    except Exception:
-        raise
 
 
 def represent_label(dumper, data):
