@@ -1,7 +1,7 @@
 from letra._file_io.file_io import (
-    read_templates_from_file,
     get_path_for_read,
     get_path_for_write,
+    read_templates_from_file,
     write_templates_to_file,
 )
 from yaml import FullLoader, YAMLError
