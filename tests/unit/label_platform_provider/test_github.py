@@ -4,6 +4,7 @@ from letra._label_platform_provider.github import (
     get_labels_from_repository,
     create_label,
 )
+from letra._label_platform_provider.http_helpers import HttpJsonResponse
 from letra import Label
 from tests.helpers import stub_request_json_response, stub_labels
 
@@ -14,6 +15,7 @@ request_json_mock_target = f"{sut_module_target}.request_json"
 extract_labels_mock_target = f"{sut_module_target}.extract_labels"
 get_base_url_mock_target = f"{sut_module_target}.get_base_label_api_url"
 get_headers_mock_target = f"{sut_module_target}.get_headers"
+retrieve_labels_mock_target = f"{sut_module_target}.retrieve_labels"
 environ_get_mock_target = f"{sut_module_target}.environ.get"
 exp_base_url = "https://api.github.com/repos/badges/shields/labels"
 exp_default_headers = {}
@@ -29,39 +31,117 @@ def stub_helper_functions(monkeypatch, url, headers):
     monkeypatch.setattr(get_headers_mock_target, lambda *y: headers)
 
 
-async def test_get_labels_from_repository_passes_correct_args_to_request_json(
-    monkeypatch,
-):
-    act_data = []
+async def test_get_labels_from_repository_sub_100_labels(monkeypatch):
     act_url = ""
     exp_url = f"{exp_base_url}?per_page=100"
-    act_verb = "post"
     act_headers = {"foo": "bar"}
+    act_owner = ""
+    act_repo = ""
+    exp_owner = "swellaby"
+    exp_repo = "pauli"
+    retrieve_labels_call_count = 0
     stub_helper_functions(monkeypatch, exp_base_url, exp_default_headers)
 
-    async def mock_request_json(url, http_verb, headers, **kwargs):
-        nonlocal act_url, act_verb, act_headers
+    async def mock_retrieve_labels(url, headers, owner, repository):
+        nonlocal act_url, act_headers, act_owner
+        nonlocal act_repo, retrieve_labels_call_count
         act_url = url
-        act_verb = http_verb
         act_headers = headers
-        return stub_request_json_response
+        act_owner = owner
+        act_repo = repository
+        retrieve_labels_call_count += 1
+        response = HttpJsonResponse(
+            status=200, headers={"server": "Github.com"}, data={},
+        )
+        return response, stub_labels
 
-    def mock_extract_labels(data):
-        nonlocal act_data
-        act_data = data
-        return stub_labels
-
-    monkeypatch.setattr(request_json_mock_target, mock_request_json)
-    monkeypatch.setattr(extract_labels_mock_target, mock_extract_labels)
+    monkeypatch.setattr(retrieve_labels_mock_target, mock_retrieve_labels)
     labels = await get_labels_from_repository(
-        owner="swellaby", repository="pauli"
+        owner=exp_owner, repository=exp_repo
     )
 
     assert labels == stub_labels
-    assert act_data == {"labels": stub_request_json_response.data}
+    assert retrieve_labels_call_count == 1
     assert act_url == exp_url
+    assert act_owner == exp_owner
+    assert act_repo == exp_repo
     assert act_headers == exp_default_headers
-    assert act_verb == "get"
+
+
+async def test_get_labels_from_repository_over_100_labels(monkeypatch):
+    owner = "rust-lang"
+    repo = "rust"
+    retrieve_labels_call_count = 0
+    first_labels = stub_labels
+    second_labels = [
+        Label(
+            name="E-Easy",
+            description=(
+                "Call for participation: Experience needed to fix: "
+                "Easy / not much"
+            ),
+            color="5DBCD2",
+        ),
+        Label(
+            name="E-help-wanted",
+            description=(
+                "Call for participation: Help is requested to "
+                "fix this issue."
+            ),
+            color="FABCD2",
+        ),
+    ]
+    third_labels = [
+        Label(
+            name="A-Lint",
+            description=(
+                "Area: Lints (warnings about flaws in source "
+                "code) such as unused_mut."
+            ),
+            color="ffff00 ",
+        ),
+        Label(
+            name="T-Compiler",
+            description=(
+                "Relevant to the compiler subteam, which "
+                "will review and decide on the PR/issue."
+            ),
+            color="BCD2FA",
+        ),
+    ]
+    base_link_url = "<https://api.github.com/repositories/724712"
+    link = (
+        f"{base_link_url}/labels?per_page=100&page=2>; "
+        'rel="next", '
+        f"{base_link_url}/labels?per_page=100&page=3>; "
+        'rel="last"'
+    )
+    mock_http_response = HttpJsonResponse(
+        status=200, headers={"server": "Github.com", "link": link}, data={},
+    )
+    mocked_labels = {1: first_labels, 2: second_labels, 3: third_labels}
+    act_urls = {}
+    exp_labels = [*first_labels, *second_labels, *third_labels]
+    exp_urls = {
+        1: f"{exp_base_url}?per_page=100",
+        2: f"{exp_base_url}?per_page=100&page=2",
+        3: f"{exp_base_url}?per_page=100&page=3",
+    }
+
+    async def mock_retrieve_labels(url, headers, owner, repository):
+        nonlocal act_urls, retrieve_labels_call_count
+        retrieve_labels_call_count += 1
+        act_urls[retrieve_labels_call_count] = url
+
+        return mock_http_response, mocked_labels[retrieve_labels_call_count]
+
+    stub_helper_functions(monkeypatch, exp_base_url, exp_default_headers)
+    monkeypatch.setattr(retrieve_labels_mock_target, mock_retrieve_labels)
+    labels = await get_labels_from_repository(owner=owner, repository=repo)
+
+    assert retrieve_labels_call_count == 3
+    assert labels == exp_labels
+    assert act_urls == exp_urls
 
 
 async def test_create_label_passes_correct_args(monkeypatch):

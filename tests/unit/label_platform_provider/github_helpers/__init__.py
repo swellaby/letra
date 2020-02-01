@@ -4,6 +4,7 @@ from letra._label_platform_provider.github_helpers import (
     get_throttle_reset_message,
     raise_github_unauthorized_error,
     raise_github_repository_not_found_error,
+    retrieve_labels,
 )
 
 from letra._label_platform_provider.http_helpers import HttpJsonResponse

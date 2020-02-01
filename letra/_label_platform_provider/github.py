@@ -1,5 +1,12 @@
+from asyncio import gather as gather_async
+from functools import reduce
+from operator import concat
 from letra import Label
-from .github_helpers import check_github_api_response_for_errors, get_headers
+from .github_helpers import (
+    check_github_api_response_for_errors,
+    get_headers,
+    retrieve_labels,
+)
 from .http_helpers import request_json, HttpJsonResponse
 from letra._parser import extract_labels
 
@@ -13,15 +20,27 @@ async def get_labels_from_repository(
 ):
     base_url = get_base_label_api_url(owner, repository)
     url = f"{base_url}?per_page=100"
-    headers = get_headers(token)
-    response = await request_json(url=url, http_verb="get", headers=headers)
-    check_github_api_response_for_errors(
-        response=response,
-        owner=owner,
-        repository=repository,
-        request_headers=headers,
+    request_headers = get_headers(token)
+    response, labels = await retrieve_labels(
+        url=url, headers=request_headers, owner=owner, repository=repository,
     )
-    labels = extract_labels({"labels": response.data})
+
+    link_header = response.headers.get("link")
+    if link_header:
+        num_pages = link_header[link_header.find('>; rel="last"') - 1]
+        paged_labels = await gather_async(
+            *[
+                retrieve_labels(
+                    url=f"{url}&page={i}",
+                    headers=request_headers,
+                    owner=owner,
+                    repository=repository,
+                )
+                for i in range(2, int(num_pages) + 1)
+            ]
+        )
+        labels += [label for _, labels in paged_labels for label in labels]
+
     return labels
 
 
