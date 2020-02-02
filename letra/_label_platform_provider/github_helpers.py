@@ -1,6 +1,7 @@
 from os import environ
 from datetime import datetime
 from .http_helpers import request_json, HttpJsonResponse
+from letra._parser import extract_labels
 
 
 def get_headers(token: str = "", auth_required: bool = False):
@@ -129,3 +130,16 @@ def check_github_api_response_for_errors(
             f"HTTP response status code: {status_code}"
         )
     )
+
+
+async def retrieve_labels(owner: str, repository: str, url: str, headers: {}):
+    response = await request_json(url=url, http_verb="get", headers=headers)
+    check_github_api_response_for_errors(
+        response=response,
+        owner=owner,
+        repository=repository,
+        request_headers=headers,
+    )
+
+    labels = extract_labels({"labels": response.data})
+    return response, labels

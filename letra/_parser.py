@@ -1,4 +1,4 @@
-from schema import Optional, Regex, Schema, SchemaError
+from schema import Optional, Regex, Schema, SchemaError, Or
 from letra import Label
 
 color_regex = r"^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
@@ -6,7 +6,7 @@ color_regex = r"^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
 label_schema = Schema(
     {
         "name": str,
-        Optional("description"): str,
+        Optional("description"): Or(str, None),
         Optional("color"): Regex(color_regex),
     },
     ignore_extra_keys=True,
