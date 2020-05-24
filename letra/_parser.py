@@ -64,9 +64,9 @@ def extract_labels(data):
 
     return [
         Label(
-            name=l["name"],
-            description=l.get("description"),
-            color=l.get("color"),
+            name=label["name"],
+            description=label.get("description"),
+            color=label.get("color"),
         )
-        for l in labels
+        for label in labels
     ]
