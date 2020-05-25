@@ -1,0 +1,25 @@
+trigger: none
+
+pr:
+- master
+
+pool:
+  vmImage: 'Ubuntu-18.04'
+
+resources:
+  repositories:
+  - repository: templates
+    type: github
+    name: swellaby/azure-pipelines-templates
+    endpoint: swellaby
+
+steps:
+- template: templates/yml/python/combo/setup-pip.yml@templates
+  parameters:
+    pipInstall:
+      requirementsFile: dev-requirements.txt
+      taskDisplayName: 'Install dependencies'
+- template: templates/yml/python/steps/run-invoke.yml@templates
+  parameters:
+    tasksAndArguments: 'lint'
+    taskDisplayName: 'Lint'

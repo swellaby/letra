@@ -20,10 +20,7 @@ steps:
     pipInstall:
       requirementsFile: dev-requirements.txt
       taskDisplayName: 'Install dependencies'
-- template: templates/yml/python/steps/run-invoke.yml@templates
-  parameters:
-    tasksAndArguments: 'lint'
-    taskDisplayName: 'Lint'
+
 - template: templates/yml/python/combo/run-pytest-ci.yml@templates
   parameters:
     test:
