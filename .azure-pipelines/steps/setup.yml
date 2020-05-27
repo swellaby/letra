@@ -1,0 +1,6 @@
+steps:
+- template: templates/yml/python/combo/setup-pip.yml@templates
+  parameters:
+    pipInstall:
+      requirementsFile: dev-requirements.txt
+      taskDisplayName: 'Install dependencies'
