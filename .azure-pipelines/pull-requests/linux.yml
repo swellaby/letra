@@ -14,11 +14,12 @@ resources:
     endpoint: swellaby
 
 steps:
-- template: templates/yml/python/combo/setup-pip.yml@templates
-  parameters:
-    pipInstall:
-      requirementsFile: dev-requirements.txt
-      taskDisplayName: 'Install dependencies'
+# - template: templates/yml/python/combo/setup-pip.yml@templates
+#   parameters:
+#     pipInstall:
+#       requirementsFile: dev-requirements.txt
+#       taskDisplayName: 'Install dependencies'
+- template: ../steps/setup.yml
 
 - template: templates/yml/python/combo/run-pytest-ci.yml@templates
   parameters:
