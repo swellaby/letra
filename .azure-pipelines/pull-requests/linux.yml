@@ -18,13 +18,6 @@ steps:
 - template: ../steps/run-tests.yml
   parameters:
     envName: 'Linux'
-
-- task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Build.SourcesDirectory)/.test-reports/coverage/unit/cobertura.xml'
-  displayName: 'Publish coverage results'
-
 - script: |
     bash <(curl -s https://codecov.io/bash) -t $(codecovToken)
   displayName: 'Publish coverage to Codecov'
