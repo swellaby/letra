@@ -1,0 +1,22 @@
+parameters:
+  envName: ''
+  envNameSuffix: ' PR'
+
+steps:
+- template: templates/yml/python/combo/run-pytest-ci.yml@templates
+  parameters:
+    test:
+      additionalArgs: ''
+      taskDisplayName: 'Run unit tests'
+    publishTestResults:
+      taskDisplayName: 'Publish unit test results'
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'junit.xml'
+      searchFolder: $(Build.SourcesDirectory)/.test-reports/results/unit
+      testRunTitle: 'letra::Unit Tests::${{ parameters.envName }}${{ parameters.envNameSuffix }} - Build $(Build.BuildId)'
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/.test-reports/coverage/unit/cobertura.xml'
+  displayName: 'Publish coverage results'
