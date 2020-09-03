@@ -51,7 +51,9 @@ async def test_get_labels_from_repository_sub_100_labels(monkeypatch):
         act_repo = repository
         retrieve_labels_call_count += 1
         response = HttpJsonResponse(
-            status=200, headers={"server": "Github.com"}, data={},
+            status=200,
+            headers={"server": "Github.com"},
+            data={},
         )
         return response, stub_labels
 
@@ -117,7 +119,9 @@ async def test_get_labels_from_repository_over_100_labels(monkeypatch):
         'rel="last"'
     )
     mock_http_response = HttpJsonResponse(
-        status=200, headers={"server": "Github.com", "link": link}, data={},
+        status=200,
+        headers={"server": "Github.com", "link": link},
+        data={},
     )
     mocked_labels = {1: first_labels, 2: second_labels, 3: third_labels}
     act_urls = {}

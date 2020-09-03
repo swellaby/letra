@@ -13,7 +13,9 @@ check_github_api_response_for_errors_mock_target = (
 exp_base_url = "https://api.github.com/repos/badges/shields/labels"
 
 
-async def test_passes_correct_args_to_request_json(monkeypatch,):
+async def test_passes_correct_args_to_request_json(
+    monkeypatch,
+):
     act_data = []
     act_url = ""
     exp_url = f"{exp_base_url}?per_page=100"
