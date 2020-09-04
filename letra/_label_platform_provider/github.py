@@ -22,7 +22,10 @@ async def get_labels_from_repository(
     url = f"{base_url}?per_page=100"
     request_headers = get_headers(token)
     response, labels = await retrieve_labels(
-        url=url, headers=request_headers, owner=owner, repository=repository,
+        url=url,
+        headers=request_headers,
+        owner=owner,
+        repository=repository,
     )
 
     link_header = response.headers.get("link")
