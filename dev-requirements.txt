@@ -3,6 +3,6 @@ pytest==6.2.4
 pytest-asyncio==0.15.1
 pytest-cov==2.12.1
 pycodestyle==2.7.0
-black==21.6b0
+black==21.7b0
 invoke==1.6.0
 bump2version==1.0.1
