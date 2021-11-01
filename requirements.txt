@@ -1,3 +1,3 @@
-aiohttp==3.7.4.post0
+aiohttp==3.8.0
 pyyaml==6.0
 schema==0.7.4
